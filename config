@@ -1,0 +1,15 @@
+[Credentials]
+password=alamakota
+
+[DropBox]
+drop_box_dir = /home/michal/work/python/test/dropbox/
+
+[DB]
+#Database MUST not be in backed up folder as it's being changed
+#during backup process. Program backs up databse itself by
+#gzipping, encryptying and putting in drobox folder as "dbmapping"
+db_path = /home/michal/work/python/test/db/
+
+[Backup]
+to_backup = /home/michal/work/python/test/to_backup/
+to_exclude =
