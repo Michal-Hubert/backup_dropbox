@@ -18,7 +18,8 @@ class FileProcessor(object):
 
     def __init__(self, config, db, encryptor):
         self.database = db
-        self.dropbox_folder = config.get('DropBox', 'drop_box_dir')
+        self.dropbox_folder = os.path.join(config.get('DropBox', \
+            'drop_box_dir'), '')
         self.password = config.get('Credentials', 'password')
         self.logger = logging.getLogger("mylog")
         self.encryptor = encryptor
