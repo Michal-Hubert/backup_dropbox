@@ -13,7 +13,7 @@ from myutils import decrypt_file, path_leaf
 from ConfigParser import SafeConfigParser
 from file_processor import FileProcessor
 
-def restore(dropbox_path, destiantion):
+def restore(dropbox_path, destiantion, override):
     '''
     Restoring module
     dropbox_path: direcotry of dropbox_path
@@ -62,6 +62,13 @@ def restore(dropbox_path, destiantion):
         logger.info('Extracting ' + key)
 
         dest_dir = ntpath.dirname(key)
+
+        #Append topmost directory
+        if override:
+            override = os.path.join(override, '')
+            dest_dir = '/' + override + dest_dir
+            logging.debug('Overridden path: ' + dest_dir)
+
         dest_file_name = path_leaf(key)
         logger.debug('Dir: ' + dest_dir + ', file name: ' + dest_file_name)
 

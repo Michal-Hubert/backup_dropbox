@@ -40,9 +40,11 @@ def main():
 
     restore_parser = subparsers.add_parser('restore', help='do restore')
     restore_parser.add_argument('-d', nargs=1, required=True,
-        metavar='dropbox_directory')
+        metavar='dropbox directory')
     restore_parser.add_argument('-r', nargs=1, required=True,
-        metavar='directory_for_backup_restoral')
+        metavar='directory for database restoral')
+    restore_parser.add_argument('-o', nargs=1, metavar='override the root of ' +
+        ' directories')
 
     args = parser.parse_args()
 
@@ -61,7 +63,10 @@ def main():
             backup(config, database)
             backup_meta(config_path)
         else:
-            restore(args.d[0], args.r[0])
+            override = ''
+            if hasattr(args, 'o'):
+                override = args.o[0]
+            restore(args.d[0], args.r[0], override)
     except KeyError:
         print 'Key not found!'
     except SystemExit:
