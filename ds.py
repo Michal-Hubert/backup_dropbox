@@ -47,6 +47,7 @@ def main():
         ' directories')
 
     args = parser.parse_args()
+    print args
 
     setup_logging()
 
@@ -64,7 +65,7 @@ def main():
             backup_meta(config_path)
         else:
             override = ''
-            if hasattr(args, 'o'):
+            if args.o:
                 override = args.o[0]
             restore(args.d[0], args.r[0], override)
     except KeyError:
