@@ -297,6 +297,45 @@ def test4():
 
     print "Test 4 ok"
 
+def test5():
+    '''
+    Initially dropbox folder is empty and databse is empty.
+    Check if file is backed + directory up and restored correctly.
+    It's very much alike test1 but here file is in subdirectory of
+    backed up directory
+    '''
+    print '-'*50
+    print "Test 5"
+    clear_all()
+    create_test_config()
+    config = SafeConfigParser()
+    config.read(TEST_PATH+TEST_CONFIG_NAME)
+    subdir = config.get('Backup', 'to_backup')+'/dir/'
+    os.makedirs(subdir)
+    file_to_backup = subdir + 'some_file'
+
+    with open(file_to_backup, 'w') as some_file:
+        some_file.write('Very first line')
+    checksum_before = hashlib.md5(open(file_to_backup, 'rb').read()).hexdigest()
+
+    #Backup
+    os.system(BACKUP_TOOL + "backup -c" + TEST_PATH + "/" + TEST_CONFIG_NAME)
+
+    #Restore
+    os.remove(file_to_backup)
+    child = pexpect.spawn(BACKUP_TOOL + "restore -d" + TEST_PATH+
+      TEST_DROPBOX_NAME + " -r" + DB_RECOVERY_PATH)
+    child.expect('Password: ')
+    child.sendline(PASSWORD)
+    print child.read()
+
+    checksum_after = hashlib.md5(open(file_to_backup, 'rb').read()).hexdigest()
+    if checksum_before != checksum_after:
+        print "Test 5 failed!"
+        sys.exit(1)
+    else:
+        print "Test 5 ok"
+
 def run_tests():
     '''
     Run test cases
@@ -305,6 +344,7 @@ def run_tests():
     test2()
     test3()
     test4()
+    test5()
     clear_all()
 
 if __name__ == "__main__":
