@@ -47,7 +47,7 @@ class FileProcessor(object):
                 self.logger.info('File is up to date')
 
         except KeyError:
-            self.logger.info('File not know. Adding to dropbox folder')
+            self.logger.info('File not known. Adding to dropbox folder')
             self.__encrypt_copy(file_path, current_hash_of_unenc_file)
             self.logger.debug('Done')
 
