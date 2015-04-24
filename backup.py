@@ -32,20 +32,20 @@ def clean_removed(config, database):
         (_, encrypted_hash, dropbox_file) = \
             value.split(FileProcessor.HASH_SEPARATOR)
 
-        dropbox_file = dropbox_folder + dropbox_file
+        dropbox_file = os.path.join(dropbox_folder,'') + dropbox_file
 
         if not os.path.isfile(key):
             batch.Delete(key)
             if not os.path.isfile(dropbox_file):
                 logger.warning('File ' + dropbox_file + ' originally ' + key + \
-                    'does not exist in dropbox dir. ' +
+                    ' does not exist in dropbox dir. ' +
                     'Consistency check will catch it.')
             else:
                 #Only for informational purposes
                 hsh = compute_hash(dropbox_file)
                 if hsh != encrypted_hash:
                     logger.warning('File ' + dropbox_file + ' originally ' +
-                    key + 'has hash that does not match db entry.' +
+                    key + ' has hash that does not match db entry.' +
                     'Consistency check will catch it.')
                 else:
                     logger.info('File ' + dropbox_file + ' orginally ' + key + \
@@ -135,16 +135,31 @@ def backup_meta(config_path):
         shutil.move(enc_file_name, dropboxdir)
         logger.info('Database was backed up.')
 
-def debug_db_dump(database):
+def dump_database(database, out_file):
     '''
     Dump content of database
     '''
     entires = 0
-    for key, value in database.RangeIter():
-        (unencrypted_hash, encrypted_hash, dropbox_file) = \
-            value.split(FileProcessor.HASH_SEPARATOR)
-        print key + ' -> unencrypted hash: ' + unencrypted_hash + \
-        ' encrypted hash ' + encrypted_hash +  ' dropbox file ' +  dropbox_file
-        print '-'*80
-        entires = entires + 1
+    with open(out_file, 'w') as output:
+        output.write('<HTML>')
+        output.write('<HEAD></HEAD>')
+        output.write('<BODY>')
+        output.write('<TABLE border="1" style="width:100%">')
+        output.write('<TR><TH>Backed up file</TH>'+
+            '<TH>Unecrypted hash</TH><TH>Encrypted hash</TH>'+
+            '<TH>Dropbox file</TH></TR>')
+        for key, value in database.RangeIter():
+            (unencrypted_hash, encrypted_hash, dropbox_file) = \
+                value.split(FileProcessor.HASH_SEPARATOR)
+            #print key + ' -> unencrypted hash: ' + unencrypted_hash + \
+            #' encrypted hash ' + encrypted_hash +  ' dropbox file ' +  dropbox_file
+            #print '-'*80
+            output.write('<TR><TD>' + key + '</TD><TD>' + unencrypted_hash + \
+                '</TD><TD>' + encrypted_hash + '</TD><TD>' + dropbox_file +
+                '</TD></TR>')
+            entires = entires + 1
+        output.write('</TABLE>')
+        output.write('</BODY>')
+        output.write('</HTML>')
     return entires
+

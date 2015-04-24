@@ -10,7 +10,8 @@ import pexpect
 import sys
 import leveldb
 import backup
-from backup import debug_db_dump
+import tempfile
+from backup import dump_database
 from myutils import path_leaf
 
 TEST_CONFIG_NAME = "config"
@@ -192,7 +193,9 @@ def test2():
         sys.exit(1)
 
     db = leveldb.LevelDB(config.get('DB', 'db_path'))
-    entries = debug_db_dump(db)
+
+    dump_file = os.path.join(tempfile.gettempdir(), '') + 'foo'
+    entries = dump_database(db, dump_file)
 
     if entries != 1:
         print "Test 2 failed!"
@@ -237,7 +240,8 @@ def test3():
     #Database shall not contain any entry
     entries = 0
     db = leveldb.LevelDB(config.get('DB', 'db_path'))
-    entries = debug_db_dump(db)
+    dump_file = os.path.join(tempfile.gettempdir(), '') + 'foo'
+    entries = dump_database(db, dump_file)
     if entries != 0:
         print "Test 3 failed - deleted file has entry in database"
         sys.exit(1)
@@ -290,7 +294,8 @@ def test4():
     #Database shall not contain any entry
     entries = 0
     db = leveldb.LevelDB(config.get('DB', 'db_path'))
-    entries = debug_db_dump(db)
+    dump_file = os.path.join(tempfile.gettempdir(), '') + 'foo'
+    entries = dump_database(db, dump_file)
     if entries != 0:
         print "Test 4 failed - deleted file has entry in database"
         sys.exit(1)
