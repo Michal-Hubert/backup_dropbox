@@ -39,7 +39,8 @@ Small example shall clarify it. Let's have the following tree to backup:
 /home/michal/foo/bar/cat/file2
 ```
 
-After backup these two files are put in _drop_box_dir_ having some random names, for example _OSNRBZ_ and _PQQNJNY_. In database there are entries matching _/home/michal/foo/bar/file1_ to _OSNRBZ_ and _/home/michal/foo/bar/cat/file2_ to _PQQNJNY_.
+After backup these two files are put in _drop_box_dir_ having some random names, for example _OSNRBZ_ and _PQQNJNY_. In database there are entries matching _/home/michal/foo/bar/file1_ to _OSNRBZ_ and _/home/michal/foo/bar/cat/file2_ to _PQQNJNY_. So the program transforms directory tree into flat sturcture: each file is in single target (_drop_box_dir_) directory. As the names are random two indentical files are given different names. Additionally program automatically backs up database and config file which are needed during recovery. This data (of course encrypted) is kept in _db_meta.tar.xyz_ in _drop_box_dir_. 
+
 
 #Usage 
 
